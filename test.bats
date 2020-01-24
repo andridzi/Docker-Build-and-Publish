@@ -60,15 +60,17 @@ teardown() {
 /usr/local/bin/docker push my/repository:myBranch-withDash"
 }
 
-@test "it pushes tags to latest" {
+@test "it pushes tags to tag name and latest" {
   export GITHUB_REF='refs/tags/myRelease'
 
   run /entrypoint.sh
 
-  expectStdOutContains "::set-output name=tag::myRelease"
-
-  expectMockCalled "/usr/local/bin/docker build -t my/repository:myRelease .
-/usr/local/bin/docker push my/repository:myRelease"
+  expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
+/usr/local/bin/docker build -t my/repository:latest -t my/repository:myRelease .
+/usr/local/bin/docker push my/repository:latest
+/usr/local/bin/docker push my/repository:myRelease
+/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:latest
+/usr/local/bin/docker logout"
 }
 
 @test "with tag names it pushes tags using the name" {
@@ -89,10 +91,12 @@ teardown() {
 
   run /entrypoint.sh
 
-  expectStdOutContains "::set-output name=tag::myRelease"
-
-  expectMockCalled "/usr/local/bin/docker build -t my/repository:myRelease .
-/usr/local/bin/docker push my/repository:myRelease"
+  expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
+/usr/local/bin/docker build -t my/repository:latest -t my/repository:myRelease .
+/usr/local/bin/docker push my/repository:latest
+/usr/local/bin/docker push my/repository:myRelease
+/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:latest
+/usr/local/bin/docker logout"
 }
 
 @test "it pushes specific Dockerfile to latest" {
