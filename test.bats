@@ -65,16 +65,10 @@ teardown() {
 
   run /entrypoint.sh
 
-#  expectStdOutContains "::set-output name=tag::latest"
   expectStdOutContains "::set-output name=tag::myRelease"
 
   expectMockCalled "/usr/local/bin/docker build -t my/repository:myRelease .
 /usr/local/bin/docker push my/repository:myRelease"
-#  expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
-#/usr/local/bin/docker build -t my/repository:latest .
-#/usr/local/bin/docker push my/repository:latest
-#/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:latest
-#/usr/local/bin/docker logout"
 }
 
 @test "with tag names it pushes tags using the name" {
