@@ -89,10 +89,10 @@ teardown() {
 
   run /entrypoint.sh
 
-  expectStdOutContains "::set-output name=tag::latest"
+  expectStdOutContains "::set-output name=tag::myRelease"
 
-  expectMockCalled "/usr/local/bin/docker build -t my/repository:latest .
-/usr/local/bin/docker push my/repository:latest"
+  expectMockCalled "/usr/local/bin/docker build -t my/repository:myRelease .
+/usr/local/bin/docker push my/repository:myRelease"
 }
 
 @test "it pushes specific Dockerfile to latest" {
